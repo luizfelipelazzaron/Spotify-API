@@ -113,7 +113,7 @@
           localStorage.removeItem(stateKey);
           if (access_token) {
             $.ajax({
-                url: 'https://api.spotify.com/v1/me',
+                url: 'http://api.spotify.com/v1/me',
                 headers: {
                   'Authorization': 'Bearer ' + access_token
                 },
@@ -139,7 +139,7 @@
             localStorage.setItem(stateKey, state);
             var scope = 'user-read-private user-read-email';
 
-            var url = 'https://accounts.spotify.com/authorize';
+            var url = 'http://accounts.spotify.com/authorize';
             url += '?response_type=token';
             url += '&client_id=' + encodeURIComponent(client_id);
             url += '&scope=' + encodeURIComponent(scope);
