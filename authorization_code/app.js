@@ -17,14 +17,14 @@ const aws = require('aws-sdk');
 
 // Para postar no Heroku
 
-// let s3 = new aws.S3({
-// 	client_id: process.env.client_id,
-// 	client_secret: process.env.client_secret
-// });
+let s3 = new aws.S3({
+  client_id: process.env.client_id,
+  client_secret: process.env.client_secret,
+});
 
-var client_id = 'd19d37e713754502b918248f93cc475e'; // Your client id
-var client_secret = '11f04258fabb422e85150d77d39440eb'; // Your secret
-var redirect_uri = 'http://localhost:8888/callback'; // Your redirect uri http://localhost:8888/callback
+// var client_id = 'd19d37e713754502b918248f93cc475e'; // Your client id
+// var client_secret = '11f04258fabb422e85150d77d39440eb'; // Your secret
+var redirect_uri = 'https://tecweb-spotfy.herokuapp.com/callback'; // Your redirect uri http://localhost:8888/callback
 
 /**
  * Generates a random string containing numbers and letters
@@ -62,9 +62,9 @@ app.get('/login', function (req, res) {
     'http://accounts.spotify.com/authorize?' +
       querystring.stringify({
         response_type: 'code',
-        client_id: client_id,
+        client_id: s3.config.client_id,
         scope: scope,
-        redirect_uri: redirect_uri,
+        redirect_uri: s3.config.redirect_uri,
         state: state,
       })
   );
@@ -91,13 +91,15 @@ app.get('/callback', function (req, res) {
       url: 'https://accounts.spotify.com/api/token',
       form: {
         code: code,
-        redirect_uri: redirect_uri,
+        redirect_uri: s3.config.redirect_uri,
         grant_type: 'authorization_code',
       },
       headers: {
         Authorization:
           'Basic ' +
-          new Buffer(client_id + ':' + client_secret).toString('base64'),
+          new Buffer(
+            s3.config.client_id + ':' + s3.config.client_secret
+          ).toString('base64'),
       },
       json: true,
     };
@@ -146,7 +148,9 @@ app.get('/refresh_token', function (req, res) {
     headers: {
       Authorization:
         'Basic ' +
-        new Buffer(client_id + ':' + client_secret).toString('base64'),
+        new Buffer(
+          s3.config.client_id + ':' + s3.config.client_secret
+        ).toString('base64'),
     },
     form: {
       grant_type: 'refresh_token',
@@ -166,4 +170,4 @@ app.get('/refresh_token', function (req, res) {
 });
 
 // console.log('Listening on 8888');
-app.listen(8888); // 8888
+app.listen(process.env.PORT); // 8888
