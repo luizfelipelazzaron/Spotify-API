@@ -64,7 +64,7 @@ app.get('/login', function (req, res) {
         response_type: 'code',
         client_id: s3.config.client_id,
         scope: scope,
-        redirect_uri: s3.config.redirect_uri,
+        redirect_uri: redirect_uri,
         state: state,
       })
   );
@@ -91,7 +91,7 @@ app.get('/callback', function (req, res) {
       url: 'https://accounts.spotify.com/api/token',
       form: {
         code: code,
-        redirect_uri: s3.config.redirect_uri,
+        redirect_uri: redirect_uri,
         grant_type: 'authorization_code',
       },
       headers: {
